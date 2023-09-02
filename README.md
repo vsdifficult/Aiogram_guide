@@ -15,7 +15,7 @@
 
 TOKEN = '123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11'
 Теперь возьмемся за основной файл - приступаем к редактированию файла bot.py. Для этого импортируем необходимые модули библиотеки aiogram и токен бота, а так же инициализируем объекты бота и диспетчера:
-"""
+```
 from aiogram import Bot, types
 from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
@@ -25,36 +25,38 @@ from config import TOKEN
 bot = Bot(token=TOKEN)
 dp = Dispatcher(bot)
 
-"""
+```
 Команда, с которой начинается общение пользователя с ботом - /start. Поэтому давайте научим нашего бота реагировать на эту команду. Создаем message_handler и объявляем там функцию ответа:
 
-"""
+```
 @dp.message_handler(commands=['start'])
 async def process_start_command(message: types.Message):
     await message.reply("Привет!\nНапиши мне что-нибудь!")
-"""
+```
 
 Ещё в ботах принято создавать обработчик команды /help- вдруг пользователь заинтересуется возможностями бота.
 Вообще, мы могли бы добавить просто help в массив, передаваемый параметру commands, чтобы получилось:
 
-"""
+```
 @dp.message_handler(commands=['start', 'help'])
-"""
+```
 Но зачем приветствовать пользователя снова? Поэтому создадим отдельный message_handler для этой команды:
 
-"""
+```
 @dp.message_handler(commands=['help'])
 async def process_help_command(message: types.Message):
     await message.reply("Напиши мне что-нибудь, и я отпрпавлю этот текст тебе в ответ!")
-"""
+```
 Обращу внимание новичка на то, что называть функции можно как угодно - хоть abc, хоть qwerty, однако называя функции понятным языком - process_start_command, process_help_command сразу понятно, какая за что отвечает. Главное, чтобы имена не повторялись. Называть как угодно можно также и имя параметра, покажу дальше.
 
 Итак! Осталось сделать обработку текстового сообщения. Для этого пишем следующее:
-"""
+
+```
 @dp.message_handler()
 async def echo_message(msg: types.Message):
     await bot.send_message(msg.from_user.id, msg.text)
-"""
+```
+
 Объясняю, что мы только что написали:
 Если не указывать тип обрабатываемого сообщения, то библиотека по умолчанию делает обработку только текстовых сообщений - то, что нам и нужно. Поэтому скобки на первой строчке остаются пустыми.
 Параметр msg это всё то же сообщение, как и в предыдущих пунктах.
@@ -62,12 +64,13 @@ async def echo_message(msg: types.Message):
 
 Финальный штрих
 Чтобы получать сообщения от серверов Telegram воспользуемся поллингом (polling. to poll - опрашивать) - постоянным опросом сервера на наличие новых обновлений. Для этого дописываем в bot.py следующее:
-"""
+```
 if __name__ == '__main__':
     executor.start_polling(dp)
-"""
+```
 Всё! Наш первый бот готов. Полный листинг программы:
-"""
+
+```
 from aiogram import Bot, types
 from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
@@ -96,4 +99,4 @@ async def echo_message(msg: types.Message):
 
 if __name__ == '__main__':
     executor.start_polling(dp)
-"""
+```
